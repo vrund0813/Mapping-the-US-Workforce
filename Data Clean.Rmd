@@ -1,0 +1,105 @@
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(stringr)
+library(ggplot2)
+library(dplyr)
+```
+
+
+```{r}
+
+data<-read.csv('D:/Masters/Fall 2023/FIA 550/Project/Data/Employement Status 2022.csv')
+data
+```
+
+```{r}
+data <- data[!apply(is.na(data) | data == "", 1, all),]
+data
+```
+
+
+```{r}
+data1<-read.csv('D:/Masters/Fall 2023/FIA 550/Project/Data/Employement Status 2010.csv')
+data1
+```
+```{r}
+data1 <- data1[!apply(is.na(data1) | data1 == "", 1, all),]
+data1
+```
+
+```{r}
+data$US.Total.2010<-data1$United.States..Total..Estimate
+data$US.Unemployment.2010<-data1$United.States..Unemployment.rate..Estimate
+data
+```
+
+
+```{r}
+colnames(data) <- c("Group", "US.Total.2022","US.Unemployment.2022","US.Total.2010","US.Unemployment.2010")
+data
+```
+
+```{r}
+(data$US.Unemployment.2022 <- (sapply(data$US.Unemployment.2022, function(x) as.numeric(gsub("%", "", x)))))
+(data$US.Unemployment.2010 <- (sapply(data$US.Unemployment.2010, function(x) as.numeric(gsub("%", "", x)))))
+```
+```{r}
+data$US.Total.2022 <- as.numeric(gsub("[^0-9]", "", data$US.Total.2022))
+data$US.Total.2022 <- as.integer(data$US.Total.2022)
+
+data$US.Total.2010 <- as.numeric(gsub("[^0-9]", "", data$US.Total.2010))
+data$US.Total.2010 <- as.integer(data$US.Total.2010)
+```
+
+```{r}
+data
+```
+
+
+```{r}
+write.csv(data, "D:/Masters/Fall 2023/FIA 550/Project/Cleaned Data/Employement Status.csv", row.names=FALSE)
+```
+
+
+```{r}
+x = read.csv('D:/Masters/Fall 2023/FIA 550/Project/Data/Unemployement by state.csv', fileEncoding = "Latin1")
+x
+```
+```{r}
+colnames(x)<-gsub("..Unemployment.rate..Estimate","",colnames(x))
+colnames(x)[1] <- "Group"
+x
+```
+
+
+
+```{r}
+df <- data.frame(lapply(x, function(x) gsub("%", "", x)))
+```
+```{r}
+df
+```
+```{r}
+write.csv(df, "D:/Masters/Fall 2023/FIA 550/Project/Cleaned Data/Unemployement by age and State.csv", row.names=FALSE)
+```
+
+```{r}
+data = read.csv('D:/Masters/Fall 2023/FIA 550/Project/Data/Industry by State 2022.csv', fileEncoding = "Latin1")
+data
+```
+
+```{r}
+colnames(data)<-gsub("..Total..Estimate","",colnames(data))
+colnames(data)[1] <- "Group"
+data
+```
+
+```{r}
+write.csv(data, "D:/Masters/Fall 2023/FIA 550/Project/Cleaned Data/Industry by State.csv", row.names=FALSE)
+```
+
+
+
+
